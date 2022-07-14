@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.plcoding.weatherapp.domain.location.LocationTracker
@@ -29,10 +30,16 @@ class DefaultLocationTracker @Inject constructor(
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        val locationmanager =
+        val locationManager =
             application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val isGpsEnabled = locationmanager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
-                locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+        Log.d("LocationTracker", "FineLocationGranted - $hasAccessFineLocationPermission")
+        Log.d("LocationTracker", "CoarseLocationGranted - $hasAccessCoarseLocationPermission")
+        Log.d("LocationTracker", "GPS enabled - $isGpsEnabled")
+
         if (!hasAccessFineLocationPermission || !hasAccessCoarseLocationPermission || !isGpsEnabled) {
             return null
         }
